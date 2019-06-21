@@ -10,6 +10,7 @@ const keys = require('./config/keys');
 require('./models/User');
 require('./models/Blog');
 require('./services/passport');
+// hook into our cache implementation (override mongoose query exec)
 require('./services/cache');
 
 mongoose.Promise = global.Promise;
