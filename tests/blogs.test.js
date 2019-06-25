@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-extend-native */
 /* eslint-disable comma-dangle */
 /* eslint-disable indent */
@@ -70,35 +71,24 @@ describe('when logged in', async () => {
 });
 
 describe('when user is not logged in', async () => {
-  test('user cannot create blog posts', async () => {
-    /**
-     * note the implicit return of fetch results
-     * and the resolution (then) of that fetch
-     */
-    const result = await page.evaluate(() => fetch('/api/blogs', {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          title: 'my test title',
-          content: 'my test content'
-        })
-      }).then(res => res.json()));
-
-    expect(result).toEqual({ error: 'You must log in!' });
-  });
-
-  test('user cannot get a list of posts', async () => {
-    const result = await page.evaluate(() => fetch('/api/blogs', {
-        method: 'GET',
-        credentials: 'same-origin',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then(res => res.json()));
-
-    expect(result).toEqual({ error: 'You must log in!' });
+  const actions = [
+    {
+      method: 'get',
+      path: '/api/blogs'
+    },
+    {
+      method: 'post',
+      path: '/api/blogs',
+      data: {
+        title: 'Test',
+        content: 'Test'
+      }
+    }
+  ];
+  test('blog related actions are prohibited', async () => {
+    const results = await page.execRequests(actions);
+    for (const result of results) {
+      expect(result).toEqual({ error: 'You must log in!' });
+    }
   });
 });
