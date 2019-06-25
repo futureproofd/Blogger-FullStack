@@ -31,7 +31,7 @@ class CustomPage {
     await this.page.setCookie({ name: 'session.sig', value: sig });
 
     // refresh and re-render page with session now set
-    await this.page.goto('localhost:3000');
+    await this.page.goto('localhost:3000/blogs');
     // wait for anchor tag to render
     await this.page.waitFor('a[href="/auth/logout"]');
   }

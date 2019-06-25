@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+jest.setTimeout(30000);
 // automatically supply user model
 require('../models/User');
 
