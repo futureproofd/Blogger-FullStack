@@ -33,7 +33,7 @@ require('./routes/authRoutes')(app);
 require('./routes/blogRoutes')(app);
 
 // production file serving
-if (['production'].includes(process.env.NODE_ENV)) {
+if (['production', 'ci'].includes(process.env.NODE_ENV)) {
   app.use(express.static('client/build'));
 
   const path = require('path');

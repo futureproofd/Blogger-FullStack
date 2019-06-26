@@ -1,12 +1,13 @@
+/* eslint-disable prefer-rest-params */
 /* eslint-disable new-cap */
 /* eslint-disable func-names */
 /* eslint-disable no-unused-vars */
 const mongoose = require('mongoose');
 const redis = require('redis');
 const util = require('util');
+const keys = require('../config/keys');
 
-const redisUrl = 'redis://127.0.0.1:6379';
-const client = redis.createClient(redisUrl);
+const client = redis.createClient(keys.redisUrl);
 
 // use promises instead of callbacks for redis client
 client.hget = util.promisify(client.hget);
@@ -39,8 +40,6 @@ mongoose.Query.prototype.exec = async function () {
     // note, we need to handle the case of an array (list of blog entries)
     const doc = JSON.parse(cacheValue);
 
-    console.log('serving from cache:', doc);
-
     return Array.isArray(doc)
       ? doc.map(d => new this.model(d))
       : new this.model(doc);
@@ -51,8 +50,6 @@ mongoose.Query.prototype.exec = async function () {
   // add to cache in JSON format
   client.hset(this.hashKey, key, JSON.stringify(result));
 
-  // return the actual mongoose document object
-  console.log('serving from mongo');
   return result;
 };
 
