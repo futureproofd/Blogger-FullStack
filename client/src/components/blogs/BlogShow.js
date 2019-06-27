@@ -15,6 +15,7 @@ class BlogShow extends Component {
             "https://futureblog-bucket.s3.us-east-2.amazonaws.com/" +
             this.props.blog.imageUrl
           }
+          alt={this.props.blog.title}
         />
       );
     }
