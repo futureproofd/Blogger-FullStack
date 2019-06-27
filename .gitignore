@@ -1,3 +1,6 @@
 node_modules
 nohup.out
 .DS_Store
+
+#keys
+config/dev.js

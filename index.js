@@ -31,6 +31,7 @@ app.use(passport.session());
 // event handlers
 require('./routes/authRoutes')(app);
 require('./routes/blogRoutes')(app);
+require('./routes/uploadRoutes')(app);
 
 // production file serving
 if (['production', 'ci'].includes(process.env.NODE_ENV)) {
