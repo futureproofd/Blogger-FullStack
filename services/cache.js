@@ -14,6 +14,7 @@ client.hget = util.promisify(client.hget);
 
 const { exec } = mongoose.Query.prototype;
 
+// Add caching method to mongoose prototype
 mongoose.Query.prototype.cache = function (options = {}) {
   this.useCache = true;
   this.hashKey = JSON.stringify(options.key || '');
@@ -21,17 +22,22 @@ mongoose.Query.prototype.cache = function (options = {}) {
   return this;
 };
 
+/**
+ * Override native mongoose method
+ * patches the execution of a mongoose query to use Redis caching
+ *  and instantiate in the context of 'this', our mongoose instance
+ */
 mongoose.Query.prototype.exec = async function () {
   if (!this.useCache) {
     return exec.apply(this, arguments);
   }
 
+  // Build a hashed key/value redis pair
   const key = JSON.stringify(
     Object.assign({}, this.getQuery(), {
       collection: this.mongooseCollection.name,
     }),
   );
-
   // check redis for a value for 'key'
   const cacheValue = await client.hget(this.hashKey, key);
 

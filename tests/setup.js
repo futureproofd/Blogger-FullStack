@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
-jest.setTimeout(40000);
+jest.setTimeout(50000);
 // automatically supply user model
-require('../models/User');
+require('../models/UserModel');
 
 const mongoose = require('mongoose');
 const keys = require('../config/keys');
