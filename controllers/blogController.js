@@ -14,6 +14,25 @@ router.get('/api/blogs', requireLogin, async (req, res) => {
   res.send(blogs);
 });
 
+router.delete(
+  '/api/blogs/delete/:id',
+  requireLogin,
+  cleanCache,
+  async (req, res) => {
+    console.log('request data', req.body.blogId);
+    try {
+      const del = await blogService.deleteBlog(req.body.blogId);
+      if (!del) {
+        res.status(404).send('Blog entry not found.');
+      } else {
+        res.status(204).send('Blog entry deleted.');
+      }
+    } catch (err) {
+      res.send(500, err);
+    }
+  },
+);
+
 router.post('/api/blogs', requireLogin, cleanCache, async (req, res) => {
   const { title, content, imageUrl } = req.body;
 

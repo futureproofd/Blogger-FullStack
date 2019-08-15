@@ -12,6 +12,8 @@ const {
   uploadController,
 } = require('./controllers');
 
+// todo separate database connection into app / server so we can require app in our tests without instantiating a production database
+// at the same time... that or we continue using keys
 mongoose.Promise = global.Promise;
 mongoose.connect(keys.mongoURI, { useMongoClient: true });
 
@@ -43,8 +45,14 @@ if (['production', 'ci'].includes(process.env.NODE_ENV)) {
 }
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log('Listening on port', PORT);
-});
+if (process.env.NODE_ENV === 'test') {
+  app.listen(5001, () => {
+    console.log('Listening on port', PORT);
+  });
+} else {
+  app.listen(PORT, () => {
+    console.log('Listening on port', PORT);
+  });
+}
 
 module.exports = app;

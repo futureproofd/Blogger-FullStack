@@ -4,6 +4,7 @@ class BlogService {
     this.Blog = Blog;
     this.listBlogs = this.listBlogs.bind(this);
     this.addBlog = this.addBlog.bind(this);
+    this.deleteBlog = this.deleteBlog.bind(this);
   }
 
   // hook into our cache implementation (overrides mongoose query exec)
@@ -23,6 +24,10 @@ class BlogService {
   async addBlog(blog) {
     await blog.save();
     return blog;
+  }
+
+  async deleteBlog(blogId) {
+    return this.Blog.findByIdAndRemove({ _id: blogId });
   }
 }
 

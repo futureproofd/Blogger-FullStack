@@ -8,12 +8,14 @@ const User = mongoose.model('User');
 module.exports = function passportConfig(passport) {
   // passport takes the user id and stores it internally on req.session.passport
   passport.serializeUser((user, done) => {
+    console.log('serializing:', user);
     done(null, user.id);
   });
 
   // user profile from our DB is attached to the request handler at req.user
   passport.deserializeUser((id, done) => {
     User.findById(id).then((user) => {
+      console.log('deserializing: ', user);
       done(null, user);
     });
   });

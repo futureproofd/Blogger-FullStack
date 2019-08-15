@@ -1,33 +1,31 @@
 /* eslint-disable no-undef */
 const request = require('supertest');
-const mongoose = require('mongoose');
 const app = require('../index');
-const { Blog } = require('../models');
+const userFactory = require('./factories/userFactory');
 
-describe('BlogController operations', () => {
-  beforeAll(async () => {
-    db = await mongoose.createConnection('mongodb://127.0.0.1:27017/test');
-  });
-
-  afterAll(async () => {
-    await db.close();
-  });
-
-  beforeEach(async () => {
-    await Blog.remove({});
-  });
-
+describe('BlogController routes', async () => {
   test('returns 404', async () => {
     await request(app)
-      .get('/bogusRoute')
+      .get('/api/bogusRoute')
       .expect(404);
   });
 
-  /*
   test('returns 401 for /blogs without auth', async () => {
     await request(app)
-      .get('/blogs')
+      .get('/api/blogs')
       .expect(401);
   });
-  */
+
+  describe('authenticated routes', async () => {
+    beforeEach(async () => {
+      const user = await userFactory();
+      // const { session, sig } = sessionFactory(user);
+    });
+
+    test('returns 200 for authenticated session', async () => {
+      await request(app)
+        .get('/api/blogs')
+        .expect(200);
+    });
+  });
 });
